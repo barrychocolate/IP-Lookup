@@ -1,0 +1,89 @@
+---
+title: "IP Lookup"
+author: "Barry Bullas"
+date: "16/01/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+list_of_packages <- c("rvest", "dplyr", "httr", "xml2", "jsonlite", "DT", "here", "readtext", "data.table", "kableExtra")
+
+new_packages <- list_of_packages[!(list_of_packages %in% installed.packages()[,"Package"])]
+if(length(new_packages)) install.packages(new_packages, repos = "https://cloud.r-project.org/")
+
+#Load required packages
+lapply(list_of_packages, library, character.only = TRUE)
+
+
+fields <- data.table(field_name =c("IP", "City", "Region", "Region_code", "Country", "Country_name", "Continent_code", "in_eu", "postal", "Latitude", "Longitude", "timezone", "utc_offse", "Country_Calling_Code", "Currentcy", "languages", "ASN", "ORG"), field_description = c("public (external) IP address (same as URL ip)", "city name", "region name (administrative division)", "region code", "Country code (two letter, ISO 3166-1 aplpha-2)", "Country name", "Continent code", "whether IP address belongs to a country that is a member of European Union (EU)", "postal code", "latitude", "longitude", "timezone (IANA format i.e. Area/Location)", "UTC offset as +HHMM or -HHMM (HH is hours, MM is minutes)", "country calling code (dial in code, comma separated)",  "currency code (ISO 4217)", "languages spoken (comma separated 2 or 3 letter ISO 639 code with optional hyphen separated country suffix)", "autonomous system number", "organinzation name"))
+
+typeof(fields)
+```
+
+## IPAPI
+In this project we will use the [IPAPI}(https://ipapi.co/) to lookup information about IP addresses.
+
+The key fields returned are:
+```{r echo=FALSE}
+kable(fields)
+```
+
+# Return all information for an IP address
+
+```{r}
+# A random ip address to use
+ip <- '185.86.151.11'
+
+# URL 
+url <- paste0('https://ipapi.co/', ip, '/json/')
+
+# Get the reponse
+get_response <- GET(url)
+
+#Check status of response (200 is success)
+status_code(get_response)
+
+# Check http_type() of the response
+http_type(get_response)
+
+#list the headers
+#headers(get_response)
+
+# Parse returned text with fromJSON()
+search_content <- fromJSON(content(get_response, as = "text",  encoding = "UTF-8"), simplifyDataFrame = TRUE)
+
+#The data should be in a list
+typeof(search_content)
+
+str(search_content)
+```
+
+# Return a specific field
+By adding the field name to the url in place of the \json format we can return the specific field for an ip address in text format.  In this example we will return the Country Name for the IP address.
+
+```{r}
+# To return a specific field we add the field name to the url
+# In this example we will return the country name
+url <- paste0('https://ipapi.co/', ip, '/country_name')
+
+# Get the response
+get_field_response <- GET(url)
+
+#Check status of response (200 is success)
+status_code(get_field_response)
+
+# Check http_type() of the response
+http_type(get_field_response)
+
+#list the headers
+#headers(get_field_response)
+
+# Get the field from the content
+ips_country <- content(get_field_response)
+
+```
+
+# Result
+The Country for `r ip` is `r ips_country`.
