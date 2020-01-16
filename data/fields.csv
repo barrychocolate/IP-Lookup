@@ -1,0 +1,19 @@
+field_name,field_description
+IP,public (external) IP address (same as URL ip)
+City,city name
+Region,region name (administrative division)
+Region_code,region code
+Country,"Country code (two letter, ISO 3166-1 aplpha-2)"
+Country_name,Country name
+Continent_code,Continent code
+in_eu,whether IP address belongs to a country that is a member of European Union (EU)
+postal,postal code
+Latitude,latitude
+Longitude,longitude
+timezone,timezone (IANA format i.e. Area/Location)
+utc_offse,"UTC offset as +HHMM or -HHMM (HH is hours, MM is minutes)"
+Country_Calling_Code,"country calling code (dial in code, comma separated)"
+Currentcy,currency code (ISO 4217)
+languages,languages spoken (comma separated 2 or 3 letter ISO 639 code with optional hyphen separated country suffix)
+ASN,autonomous system number
+ORG,organinzation name
